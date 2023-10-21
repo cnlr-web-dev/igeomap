@@ -1,0 +1,4 @@
+# HGT parser library for C/C++ applications
+
+Basic library to parse elevation data from SRTM3 .HGT files.
+See test.c for usage.
