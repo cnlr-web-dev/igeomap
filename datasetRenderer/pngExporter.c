@@ -14,32 +14,35 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
 int main()
 {
     hgt_file_t *hgt = hgtCreateContext("dataset/N48E029.hgt");
+    size_t arie = hgt->sideLength * hgt->sideLength; // aria patratului format de perimetru
 
-    // cautam elevatia minima in tot fisierul
-    int32_t max = HGT_DATA_VOID, min = INT16_MAX, avg = 0;
-    for (uint32_t i = 0; i < lines * samples; i++)
+    // cautam extremele elevatiei in tot fisierul
+    int16_t max = HGT_DATA_VOID, min = INT16_MAX;
+    uint64_t avg = 0;
+    for (size_t i = 0; i < arie; i++)
     {
         int16_t elevatie = hgtReadElevationRaw(hgt, i);
         if (elevatie > max)
             max = elevatie;
         if (elevatie < min)
             min = elevatie;
+
+        avg += abs(elevatie);
     }
-    avg = (max + min) / 2;
-    printf("%s: min: %dm max: %dm avg: %dm\n", hgt->filename, min, max, avg);
+    avg /= arie; // facem media tuturor punctelor
+    printf("%s: min: %dm max: %dm avg: %ldm\n", hgt->filename, min, max, avg);
 
     // pregatim datele imaginii
-    int index = 0;
-    uint8_t *buffer = malloc(lines * samples * 3); // intensitate
-    for (uint32_t i = 0; i < lines * samples * 3; i++)
+    uint8_t *buffer = malloc(arie); // intensitatea este reprezentata de o singura valoare pe 8 biti
+    for (size_t i = 0; i < arie; i++)
     {
         int16_t elevatie = hgtReadElevationRaw(hgt, i);
-        buffer[index++] = (uint8_t)map(elevatie, min, max, 0, 255);
+        buffer[i] = (uint8_t)map(elevatie, min, max, 0, 255);
     }
 
     // o scriem
-    stbi_write_png_compression_level = 0;
-    stbi_write_bmp("test.bmp", lines * 3 - 2, samples * 3, 1, buffer);
+    stbi_write_png_compression_level = 0;                                                                                                                    // dezactivam compresia
+    stbi_write_png("test.png", hgt->sideLength, hgt->sideLength, 1, buffer, hgt->sideLength * sizeof(uint8_t) /*cam redundant, 8 biti reprezinta un byte*/); // generam fisierul .png
 
     hgtDeleteContext(hgt);
 

@@ -4,13 +4,12 @@
 
 typedef struct
 {
-    const char *filename;
-    FILE *fd;
-    uint16_t *buffer;
-    uint32_t bufferSize;
+    const char *filename; // original file name
+    FILE *fd;             // internal file descriptor
+    uint16_t *buffer;     // internal buffer to the file contents
+    uint32_t bufferSize;  // size of the buffer
+    uint16_t sideLength;  // length in points of the side of the perimeter
 } hgt_file_t;
-
-static const uint32_t lines = 1201, samples = 1201; // SRTM3
 
 hgt_file_t *hgtCreateContext(const char *filename);
 void hgtDeleteContext(hgt_file_t *hgt);
