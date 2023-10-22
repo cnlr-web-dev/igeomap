@@ -13,9 +13,13 @@ hgt_file_t *hgtCreateContext(const char *filename)
         return NULL;
     }
 
+    hgt->filename = filename;
+
     fseek(hgt->fd, 0, SEEK_END);      // seek at the end
     hgt->bufferSize = ftell(hgt->fd); // read the file pointer
     fseek(hgt->fd, 0, SEEK_SET);      // seek at the start
+
+    printf("%d", hgt->bufferSize);
 
     hgt->buffer = malloc(hgt->bufferSize);           // allocate a buffer to hold the buffer
     fread(hgt->buffer, hgt->bufferSize, 1, hgt->fd); // read the whole file
