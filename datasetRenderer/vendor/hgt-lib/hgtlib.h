@@ -13,5 +13,10 @@ typedef struct
 
 hgt_file_t *hgtCreateContext(const char *filename);
 void hgtDeleteContext(hgt_file_t *hgt);
-int16_t hgtReadElevationRaw(hgt_file_t *hgt, size_t offset);
 int16_t hgtReadElevation(hgt_file_t *hgt, double longitude, double latitude);
+
+// helper function to read raw values from the buffer
+static inline int16_t hgtReadElevationRaw(hgt_file_t *hgt, size_t offset)
+{
+    return (int16_t)hgt->buffer[offset];
+}

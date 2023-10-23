@@ -25,6 +25,12 @@ hgt_file_t *hgtCreateContext(const char *filename)
 
     hgt->sideLength = sqrt(hgt->bufferSize / sizeof(int16_t)); // the file is a square of 16-bit integers, the buffer size is its area
 
+    // swap endianness on little-endian systems
+    // fixme: do detection
+    size_t bufferIntegers = hgt->bufferSize / sizeof(int16_t);
+    for (size_t i = 0; i < bufferIntegers; i++)
+        hgt->buffer[i] = (hgt->buffer[i] << 8) | (hgt->buffer[i] >> 8);
+
     return hgt;
 }
 
@@ -36,17 +42,6 @@ void hgtDeleteContext(hgt_file_t *hgt)
     // delete the used pointers
     free(hgt->buffer);
     free(hgt);
-}
-
-int16_t hgtReadElevationRaw(hgt_file_t *hgt, size_t offset)
-{
-    uint16_t be, le;
-
-    be = hgt->buffer[offset];            // read the elevation value at the offset
-    le = ((be & 0xFF) << 8) | (be >> 8); // swap endianness (x86_64 is little-endian)
-                                         // fixme: don't assume this is x86_64!
-
-    return (int16_t)le;
 }
 
 int16_t hgtReadElevation(hgt_file_t *hgt, double longitude, double latitude)
