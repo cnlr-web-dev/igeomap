@@ -44,7 +44,9 @@ int main()
     stbi_write_png_compression_level = 0;                                                                                                                    // dezactivam compresia
     stbi_write_png("test.png", hgt->sideLength, hgt->sideLength, 1, buffer, hgt->sideLength * sizeof(uint8_t) /*cam redundant, 8 biti reprezinta un byte*/); // generam fisierul .png
 
+    // deallocam memoria
     hgtDeleteContext(hgt);
+    free(buffer);
 
     return 0;
 }
