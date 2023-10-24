@@ -35,6 +35,7 @@ uint64_t avg = 0;
 
 // suprafata terenului
 int16_t suprafata[4000][4000];
+double scalarInaltime = 0.5;
 size_t factor = 1; // nu e chiar un scalar, e pentru trunchiere
 size_t latura;
 
@@ -60,21 +61,21 @@ vector3_t calculeazaNormala(vector3_t a, vector3_t b, vector3_t c)
 
 void genereazaSTL()
 {
-    int nrTriunghiuri = (latura / factor) * (latura / factor);                   // aria noului patrat
+    int nrTriunghiuri = latura * latura * 2;                                     // aria noului patrat
     stl_triangle_t *triunghiuri = calloc(nrTriunghiuri, sizeof(stl_triangle_t)); // alocam dinamic triunghiurile
     stl_header_t *antet = calloc(1, sizeof(stl_header_t));                       // alocam dinamic antetul
 
     // setam numarul de triunghiuri in antet
-    antet->triunghiuri = 1;
+    antet->triunghiuri = nrTriunghiuri;
 
     // generam suprafata
-    uint32_t i = 0;
-    for (int x = factor; x < latura; x += factor * 2)
+    uint64_t i = 0;
+    for (int x = factor; x < latura; x += factor)
     {
-        for (int y = factor; y < latura; y += factor * 2)
+        for (int y = factor; y < latura; y += factor)
         {
-            int xx1 = x / 2, yy1 = y / 2;
-            int xx2 = xx1 + 1, yy2 = yy1 + 1;
+            double xx1 = x - 0.5, yy1 = y - 0.5;
+            double xx2 = xx1 + 1, yy2 = yy1 + 1;
             stl_triangle_t *triunghi1 = &triunghiuri[i++];
             stl_triangle_t *triunghi2 = &triunghiuri[i++];
 
@@ -98,13 +99,12 @@ void genereazaSTL()
             triunghi2->varf[2].y = yy1;
 
             // umplem adancimea in functie de coordonate
-            triunghi1->varf[0].z = suprafata[(int)triunghi1->varf[0].x][(int)triunghi1->varf[0].y];
-            triunghi1->varf[1].z = suprafata[(int)triunghi1->varf[1].x][(int)triunghi1->varf[1].y];
-            triunghi1->varf[2].z = suprafata[(int)triunghi1->varf[2].x][(int)triunghi1->varf[2].y];
-
-            triunghi2->varf[0].z = suprafata[(int)triunghi2->varf[0].x][(int)triunghi2->varf[0].y];
-            triunghi2->varf[1].z = suprafata[(int)triunghi2->varf[1].x][(int)triunghi2->varf[1].y];
-            triunghi2->varf[2].z = suprafata[(int)triunghi2->varf[2].x][(int)triunghi2->varf[2].y];
+            triunghi1->varf[0].z = suprafata[(int)triunghi1->varf[0].x][(int)triunghi1->varf[0].y] * scalarInaltime;
+            triunghi1->varf[1].z = suprafata[(int)triunghi1->varf[1].x][(int)triunghi1->varf[1].y] * scalarInaltime;
+            triunghi1->varf[2].z = suprafata[(int)triunghi1->varf[2].x][(int)triunghi1->varf[2].y] * scalarInaltime;
+            triunghi2->varf[0].z = suprafata[(int)triunghi2->varf[0].x][(int)triunghi2->varf[0].y] * scalarInaltime;
+            triunghi2->varf[1].z = suprafata[(int)triunghi2->varf[1].x][(int)triunghi2->varf[1].y] * scalarInaltime;
+            triunghi2->varf[2].z = suprafata[(int)triunghi2->varf[2].x][(int)triunghi2->varf[2].y] * scalarInaltime;
 
             triunghi1->normal = calculeazaNormala(triunghi1->varf[0], triunghi1->varf[1], triunghi1->varf[2]);
             triunghi2->normal = calculeazaNormala(triunghi2->varf[0], triunghi2->varf[1], triunghi2->varf[2]);
@@ -120,7 +120,7 @@ void genereazaSTL()
 
 int main()
 {
-    hgt = hgtCreateContext("raw/N45E024.hgt"); // creeaza context pentru fisierul hgt
+    hgt = hgtCreateContext("raw/N47E024.hgt"); // creeaza context pentru fisierul hgt
     latura = hgt->sideLength;                  // latura impartita cu factor
 
     // cautam extremele elevatiei in tot fisierul si integram in matrice
