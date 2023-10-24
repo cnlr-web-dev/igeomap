@@ -35,13 +35,12 @@ uint64_t avg = 0;
 
 // suprafata terenului
 int16_t suprafata[4000][4000];
-size_t arie;
-size_t factor = 3;
+size_t factor = 3; // nu e chiar un scalar, e pentru trunchiere
+size_t latura;
 
 void genereazaSTL()
 {
-    int latura = hgt->sideLength / factor;                                       // latura impartita cu factor
-    int nrTriunghiuri = latura * latura;                                         // aria noului patrat
+    int nrTriunghiuri = (latura / factor) * (latura / factor);                   // aria noului patrat
     stl_triangle_t *triunghiuri = calloc(nrTriunghiuri, sizeof(stl_triangle_t)); // alocam dinamic triunghiurile
     stl_header_t *antet = calloc(1, sizeof(stl_header_t));                       // alocam dinamic antetul
 
@@ -49,24 +48,25 @@ void genereazaSTL()
     antet->triunghiuri = nrTriunghiuri;
 
     // generam suprafata
-    for (int x = 1; x < latura; x++)
+    for (int x = factor; x < latura; x += factor)
     {
-        for (int y = 1; y < latura; y++)
+        for (int y = factor; y < latura; y += factor)
         {
-            stl_triangle_t *triunghi = &triunghiuri[y * latura + x];
+            int xx = x / factor, yy = y / factor;
+            stl_triangle_t *triunghi = &triunghiuri[yy * (latura / factor - 1) + xx];
             triunghi->normal.x = triunghi->normal.y = triunghi->normal.z = 0;
 
-            triunghi->varf[0].x = x + 1;
-            triunghi->varf[0].y = y + 1;
-            triunghi->varf[0].z = suprafata[x + 1][y + 1];
+            triunghi->varf[0].x = xx + 1;
+            triunghi->varf[0].y = yy + 1;
+            triunghi->varf[0].z = suprafata[xx + 1][yy + 1];
 
-            triunghi->varf[1].x = x;
-            triunghi->varf[1].y = y;
-            triunghi->varf[1].z = suprafata[x][y];
+            triunghi->varf[1].x = xx;
+            triunghi->varf[1].y = yy;
+            triunghi->varf[1].z = suprafata[xx][yy];
 
-            triunghi->varf[2].x = x - 1;
-            triunghi->varf[2].y = y - 1;
-            triunghi->varf[2].z = suprafata[x - 1][y - 1];
+            triunghi->varf[2].x = xx - 1;
+            triunghi->varf[2].y = yy - 1;
+            triunghi->varf[2].z = suprafata[xx - 1][yy - 1];
         }
     }
 
@@ -80,22 +80,26 @@ void genereazaSTL()
 int main()
 {
     hgt = hgtCreateContext("raw/N48E029.hgt"); // creeaza context pentru fisierul hgt
-    arie = hgt->sideLength * hgt->sideLength;  // aria perimetrului descris
+    latura = hgt->sideLength;                  // latura impartita cu factor
 
     // cautam extremele elevatiei in tot fisierul si integram in matrice
-    for (size_t i = 0; i < arie; i += factor)
+    for (int x = 0; x < hgt->sideLength; x++)
     {
-        int16_t elevatie = hgtReadElevationRaw(hgt, i);
-        if (elevatie > max)
-            max = elevatie;
-        if (elevatie < min)
-            min = elevatie;
+        for (int y = 0; y < hgt->sideLength; y++)
+        {
+            int16_t elevatie = hgtReadElevationRaw(hgt, y * hgt->sideLength + x);
+            if (elevatie > max)
+                max = elevatie;
+            if (elevatie < min)
+                min = elevatie;
 
-        avg += abs(elevatie);
+            avg += abs(elevatie);
 
-        suprafata[(i / factor) / arie][(i / factor) % arie] = elevatie;
+            suprafata[x][y] = elevatie;
+        }
     }
-    avg /= arie; // facem media tuturor punctelor
+
+    avg /= latura * latura; // facem media tuturor punctelor
     printf("%s: %dx%d min: %dm max: %dm avg: %ldm\n", hgt->filename, hgt->sideLength, hgt->sideLength, min, max, avg);
 
     genereazaSTL(); // fa generarea

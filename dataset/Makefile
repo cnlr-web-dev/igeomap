@@ -1,6 +1,6 @@
 # variabile
 CC:=gcc # compilator C
-CFLAGS:=-std=gnu11 -Ofast -Ivendor/ # argumente compilator C
+CFLAGS:=-g -std=gnu11 -Ofast -Ivendor/ # argumente compilator C
 LDFLAGS:=-lm # argumente linker
 
 # retete
