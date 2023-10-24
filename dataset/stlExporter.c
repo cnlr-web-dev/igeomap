@@ -36,7 +36,6 @@ uint64_t avg = 0;
 // suprafata terenului
 int16_t suprafata[4000][4000];
 double scalarInaltime = 0.5;
-size_t factor = 1; // nu e chiar un scalar, e pentru trunchiere
 size_t latura;
 
 vector3_t calculeazaNormala(vector3_t a, vector3_t b, vector3_t c)
@@ -70,9 +69,9 @@ void genereazaSTL()
 
     // generam suprafata
     uint64_t i = 0;
-    for (int x = factor; x < latura; x += factor)
+    for (int x = 1; x < latura; x += 1)
     {
-        for (int y = factor; y < latura; y += factor)
+        for (int y = 1; y < latura; y += 1)
         {
             double xx1 = x - 0.5, yy1 = y - 0.5;
             double xx2 = xx1 + 1, yy2 = yy1 + 1;
