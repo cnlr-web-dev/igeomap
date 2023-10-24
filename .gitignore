@@ -22,9 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# dataset
-dataset
-__pycache__
+# dataset raw
+raw
 
 # renderuri
 *.stl
@@ -34,3 +33,6 @@ __pycache__
 
 # C/C++
 *.o
+
+# executabile
+*.elf

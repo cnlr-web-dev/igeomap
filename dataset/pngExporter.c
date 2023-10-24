@@ -13,7 +13,7 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
 
 int main()
 {
-    hgt_file_t *hgt = hgtCreateContext("dataset/N48E029.hgt");
+    hgt_file_t *hgt = hgtCreateContext("raw/N48E029.hgt");
     size_t arie = hgt->sideLength * hgt->sideLength; // aria patratului format de perimetru
 
     // cautam extremele elevatiei in tot fisierul
