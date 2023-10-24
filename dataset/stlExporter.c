@@ -38,6 +38,26 @@ int16_t suprafata[4000][4000];
 size_t factor = 3; // nu e chiar un scalar, e pentru trunchiere
 size_t latura;
 
+vector3_t calculeazaNormala(vector3_t a, vector3_t b, vector3_t c)
+{
+    // https://www.khronos.org/opengl/wiki/Calculating_a_Surface_Normal
+    vector3_t u = {b.x - a.x,
+                   b.y - a.y,
+                   b.z - a.z};
+
+    vector3_t v = {
+        c.x - a.x,
+        c.y - a.y,
+        c.z - a.z};
+
+    vector3_t normala;
+    normala.x = u.y * v.z - u.z * v.y;
+    normala.y = u.z * v.x - u.x * v.z;
+    normala.z = u.x * v.y - u.y * v.x;
+
+    return normala;
+}
+
 void genereazaSTL()
 {
     int nrTriunghiuri = (latura / factor) * (latura / factor);                   // aria noului patrat
@@ -54,7 +74,6 @@ void genereazaSTL()
         {
             int xx = x / factor, yy = y / factor;
             stl_triangle_t *triunghi = &triunghiuri[yy * (latura / factor - 1) + xx];
-            triunghi->normal.x = triunghi->normal.y = triunghi->normal.z = 0;
 
             triunghi->varf[0].x = xx + 1;
             triunghi->varf[0].y = yy + 1;
@@ -67,6 +86,8 @@ void genereazaSTL()
             triunghi->varf[2].x = xx - 1;
             triunghi->varf[2].y = yy - 1;
             triunghi->varf[2].z = suprafata[xx - 1][yy - 1];
+
+            triunghi->normal = calculeazaNormala(triunghi->varf[0], triunghi->varf[1], triunghi->varf[2]);
         }
     }
 
