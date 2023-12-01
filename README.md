@@ -1,17 +1,18 @@
-# Space Apps Challenge (CNLR Web Development Team)
+# igeomap
 
-Foloseste date topografice din dataset-ul "NASA Shuttle Radar Topography Mission Global 1 arc second V003"
-Acestea trebuie sa se afle in folderul datasetParser/dataset
+Aplicație care prelucrează și afișează datele din misiunea "NASA Shuttle Radar Topography Mission Global 1 arc second V003".
 
-# Acest proiect are dependente
+## Getting started
 
-Sunt necesare urmatoarele programe:
-
+Sunt necesare următoarele programe:
 * nodejs
 * npm
 * python3
 
 Pe langa acestea, bibliotecile necesare se instaleaza folosind comenzile:
-
 * `npm install`
 * `pip install -r requirements.txt`
+
+##
+
+Nasa Space Apps 2023: https://www.spaceappschallenge.org/2023/find-a-team/cnlr-web-development/?tab=project

@@ -16,16 +16,13 @@ function MapDrawer({ children, location }) {
             <div className="drawer-side">
                 <label htmlFor="map_drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                 <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-                    {/* Sidebar content here */}
-
                     {pages.map((page, index) => (
                         <li key={index}>
-                            <Link to={page.path} className={page.path == location.pathname ? 'active' : ''}>
+                            <Link to={page.path} className={page.path === location.pathname ? 'active' : ''}>
                                 <page.icon size={23} className="inline-block" /> {page.title}
                             </Link>
                         </li>
                     ))}
-
                 </ul>
             </div>
         </div>

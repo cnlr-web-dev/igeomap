@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './globals.css';
 import App from './App';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NotFound from './404';
-import GranulePage from './pages/granule';
+import GranulePage from './Granule';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

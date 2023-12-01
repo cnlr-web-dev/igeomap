@@ -3,30 +3,29 @@
 @tailwind utilities;
 
 .markercluster-map {
-    height: 90vh;
-    margin-top: 68px !important;
-    z-index: 0;
-  }
+  height: 90vh;
+  margin-top: 68px !important;
+  z-index: 0;
+}
 
-  .granule-map {
-    height: 80vh;
-    width: 100%;
-    z-index: 0;
-  }
+.granule-map {
+  height: 80vh;
+  width: 100%;
+  z-index: 0;
+}
 
-  .navbar {
-    z-index: 100 !important;
-  }
+.navbar {
+  z-index: 100 !important;
+}
 
-  .hero {
-    margin-top: 60px !important;
-  }
+.hero {
+  margin-top: 60px !important;
+}
 
-  .drawer-side {
-    z-index: 100;
-  }
+.drawer-side {
+  z-index: 100;
+}
 
-  img {
-    user-select: none !important;
-  }
-
+img {
+  user-select: none !important;
+}

@@ -11,6 +11,10 @@
 # production
 /build
 
+/.firebase
+/src/.firebaserc
+/src/firebase.json
+
 # misc
 .DS_Store
 .env.local
@@ -36,3 +40,5 @@ raw
 
 # executabile
 *.elf
+
+README2.MD
